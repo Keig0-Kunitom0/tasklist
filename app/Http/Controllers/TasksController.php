@@ -15,13 +15,19 @@ class TasksController extends Controller
      */
     public function index()
     {
-         
-         $tasks=Task::paginate(25);
-         
-         
-         return view('tasks.index', [
-             'tasks' => $tasks,
-             ]);
+        $data = [];
+        if (\Auth::check()) { // 認証済みの場合
+            // 認証済みユーザを取得
+            $user = \Auth::user();
+            // ユーザの投稿の一覧を作成日時の降順で取得
+            $tasklists = $user->tasklists()->orderBy('created_at', 'desc')->paginate(10);
+
+            $data = [
+                'user' => $user,
+                'tasks' => $tasklists,
+            ];
+        }
+            return view('welcome', $data);
     }
     /**
      * Show the form for creating a new resource.
@@ -52,11 +58,11 @@ class TasksController extends Controller
             'content' => 'required|max:255',
         ]);
         
-        $task = new Task;
-        $task->status = $request->status;
-        $task->content = $request->content;
-        $task->save();
-         
+        $request->user()->tasklists()->create([
+            'content' => $request->content,
+            'status' => $request->status,
+        ]);
+        
         return redirect('/');
     }
 
@@ -130,8 +136,9 @@ class TasksController extends Controller
         //
         $task = Task::findOrFail($id);
         
-        $task->delete();
-        
+        if (\Auth::id() === $task->user_id) {
+            $task->delete();
+        }
         
         return redirect('/');
         
