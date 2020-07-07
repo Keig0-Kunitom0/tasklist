@@ -27,7 +27,8 @@ class TasksController extends Controller
                 'tasks' => $tasklists,
             ];
         }
-            return view('welcome', $data);
+        
+        return view('welcome', $data);
     }
     /**
      * Show the form for creating a new resource.
