@@ -37,6 +37,10 @@ class TasksController extends Controller
      */
     public function create()
     {
+        if (!\Auth::check()) {
+            return redirect('/');
+        }
+        
          $task = new Task;
          
          return view('tasks.create',[
@@ -52,8 +56,10 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
+        if (!\Auth::check()) {
+            return redirect('/');
+        }
         
-        //
         $this->validate($request, [
             'status' => 'required|max:10',
             'content' => 'required|max:255',
