@@ -97,7 +97,7 @@ class TasksController extends Controller
         //
         $task = Task::findOrFail($id);
         if (\Auth::id() !== $task->user_id) {
-            return reidirect('/');
+            return redirect('/');
         }
          
         return view('tasks.edit' , [
@@ -123,7 +123,7 @@ class TasksController extends Controller
         
         $task = Task::findOrFail($id);
         if (\Auth::id() !== $task->user_id) {
-            return reidirect('/');
+            return redirect('/');
         }
          
         $task->status = $request->status;
@@ -145,7 +145,7 @@ class TasksController extends Controller
         //
         $task = Task::findOrFail($id);
         if (\Auth::id() !== $task->user_id) {
-            return reidirect('/');
+            return redirect('/');
         }
         
         $task->delete();
